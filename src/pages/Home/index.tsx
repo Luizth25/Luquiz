@@ -2,17 +2,17 @@ import Lottie from "lottie-react";
 
 import quizAnimation from "../../assets/animation_lnnj1o60.json";
 
-import { useTypedDispatch } from "../../store/hook";
-import { changeStage } from "../../store/action";
+import { changeStage } from "../../store/slice";
 
 import Paragraph from "../../components/Paragraph";
 import Title from "../../components/Title";
 import Button from "../../components/Button";
 
 import * as s from "./style";
+import { useDispatch } from "react-redux";
 
 const Home = () => {
-  const dispatch = useTypedDispatch();
+  const dispatch = useDispatch();
 
   return (
     <s.Container>

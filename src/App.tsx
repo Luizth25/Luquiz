@@ -3,16 +3,14 @@ import { ThemeProvider } from "styled-components";
 import GlobalStyle from "./styles/global";
 import theme from "./styles/theme";
 
-import { useTypedSelector } from "./store/hook";
+import { useAppSelector } from "./store/hook";
 
 import EndGame from "./pages/EndGame";
 import Home from "./pages/Home";
 import QuizQuestionsAnswers from "./pages/QuizQuestionsAnswers";
 
 const App = () => {
-  const { gameStage } = useTypedSelector((state) => ({
-    gameStage: state.quizDomain.gameStage,
-  }));
+  const gameStage = useAppSelector((state) => state.quizDomain.gameStage);
 
   return (
     <ThemeProvider theme={theme}>
