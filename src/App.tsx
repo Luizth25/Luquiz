@@ -1,23 +1,28 @@
 import { ThemeProvider } from "styled-components";
 
-import GlobalStyle from "./styles/global";
-import theme from "./styles/theme";
-
-import { useAppSelector } from "./store/hook";
-
 import EndGame from "./pages/EndGame";
 import Home from "./pages/Home";
 import QuizQuestionsAnswers from "./pages/QuizQuestionsAnswers";
 
+import { useAppSelector } from "./store/hook";
+import { EStages } from "./store/slice/types";
+
+import theme from "./styles/theme";
+import GlobalStyle from "./styles/global";
+
 const App = () => {
-  const gameStage = useAppSelector((state) => state.quizDomain.gameStage);
+  const {
+    quizDomain: { gameStage },
+  } = useAppSelector((state) => ({
+    quizDomain: state.quizDomain,
+  }));
 
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyle />
-      {gameStage === "Start" && <Home />}
-      {gameStage === "Playing" && <QuizQuestionsAnswers />}
-      {gameStage === "End" && <EndGame />}
+      {gameStage === EStages.Start && <Home />}
+      {gameStage === EStages.Playing && <QuizQuestionsAnswers />}
+      {gameStage === EStages.End && <EndGame />}
     </ThemeProvider>
   );
 };

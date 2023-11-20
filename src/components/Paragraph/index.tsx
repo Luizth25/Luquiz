@@ -1,10 +1,6 @@
 import * as s from "./styles";
 
-type TParagraphProps = {
-  title: string;
-};
-
-const Paragraph = ({ title }: TParagraphProps) => (
+const Paragraph = ({ title }: { title: string }) => (
   <s.StyledParagraph>{title}</s.StyledParagraph>
 );
 

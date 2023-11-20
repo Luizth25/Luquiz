@@ -1,49 +1,58 @@
-import { useAppSelector } from "../../store/hook";
+import { useEffect, useState } from "react";
 
-import { changeQuestion, checkAnswer } from "../../store/slice";
+import { changeQuestion, checkAnswer, postQuestion } from "../../store/slice";
+import { useAppSelector, useAppDispatch } from "../../store/hook";
 
 import Button from "../../components/Button";
 import QuizAnswers from "./components/QuizAnswers";
 import QuizContent from "../../components/QuizContent";
 import QuizQuestions from "./components/QuizQuestions";
-import { useDispatch } from "react-redux";
 
 const QuizQuestionsAnswers = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
+  const [options, setOptions] = useState<Quiz.TQuestions>();
 
-  const currentQuestion = useAppSelector(
-    (state) => state.quizDomain.currentQuestion
-  );
-
-  const questions = useAppSelector((state) => state.quizDomain.questions);
-
-  const answerSelected = useAppSelector(
-    (state) => state.quizDomain.answerSelected
-  );
+  const {
+    quizDomain: { questions, currentQuestion, answerSelected, answer },
+  } = useAppSelector((state) => ({
+    quizDomain: state.quizDomain,
+  }));
 
   const onSelect = (option: string) => {
-    dispatch(checkAnswer({ answer: question.correctAnswer, option }));
+    dispatch(postQuestion(option));
+
+    dispatch(
+      checkAnswer({
+        answer: options?.correctAnswer,
+        option,
+      })
+    );
   };
 
-  //Pega qual é a question atual
-  const question = questions[currentQuestion];
+  useEffect(() => {
+    if (questions) {
+      setOptions(questions[currentQuestion]);
+    }
+  }, [currentQuestion, questions]);
 
   return (
     <QuizContent>
       <QuizQuestions
         currentQuestion={currentQuestion}
-        question={question?.question}
-        totalQuestion={questions.length}
+        question={options?.question}
+        totalQuestion={questions?.length}
       />
-      {question?.answers?.map((option) => {
+      {options?.answers?.map((option) => {
         return (
           <QuizAnswers
             answerSelected={answerSelected === option}
-            correct={!!answerSelected && option === question.correctAnswer}
-            wrong={!!answerSelected && option !== question.correctAnswer}
+            correct={answer && option === options.correctAnswer}
+            wrong={answer && option !== options.correctAnswer}
             key={option}
             selectedAnswer={() => {
-              onSelect(option);
+              if (!answer) {
+                onSelect(option);
+              }
             }}
             answersOptions={option}
           />

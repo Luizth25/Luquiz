@@ -1,4 +1,13 @@
-import { RootState } from "../store";
-import { TypedUseSelectorHook, useSelector } from "react-redux";
+import {
+  TypedUseSelectorHook,
+  shallowEqual,
+  useDispatch,
+  useSelector,
+} from "react-redux";
 
-export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
+import { AppDispatch, RootState } from "../store";
+
+export const useAppSelector: TypedUseSelectorHook<RootState> = (state) =>
+  useSelector(state, { equalityFn: shallowEqual });
+
+export const useAppDispatch: () => AppDispatch = useDispatch;

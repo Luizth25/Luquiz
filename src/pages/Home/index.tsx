@@ -1,18 +1,24 @@
+import { useEffect } from "react";
+
 import Lottie from "lottie-react";
 
 import quizAnimation from "../../assets/animation_lnnj1o60.json";
 
-import { changeStage } from "../../store/slice";
+import { changeStage, getQuestions } from "../../store/slice";
 
 import Paragraph from "../../components/Paragraph";
 import Title from "../../components/Title";
 import Button from "../../components/Button";
 
 import * as s from "./style";
-import { useDispatch } from "react-redux";
+import { useAppDispatch } from "../../store/hook";
 
 const Home = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(getQuestions());
+  }, [dispatch]);
 
   return (
     <s.Container>

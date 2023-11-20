@@ -1,7 +1,7 @@
 export type TQuizAnswersProps = {
   answersOptions: string;
   selectedAnswer: () => void;
-  correct: boolean;
-  wrong: boolean;
+  correct: boolean | null;
+  wrong: boolean | null;
   answerSelected: boolean;
 };

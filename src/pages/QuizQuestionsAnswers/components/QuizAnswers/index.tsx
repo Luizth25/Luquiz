@@ -12,7 +12,7 @@ const QuizAnswers = ({
     <s.AnswersWrapper onClick={() => selectedAnswer()}>
       <s.Answers answerSelected={answerSelected}>
         {answersOptions}
-        <s.checkAnswer correct={correct} wrong={wrong} />
+        <s.CheckAnswer correct={correct} wrong={wrong} />
       </s.Answers>
     </s.AnswersWrapper>
   );

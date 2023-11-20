@@ -33,7 +33,10 @@ export const AnswersWrapper = styled.div`
   gap: 12px;
 `;
 
-export const checkAnswer = styled.span<{ correct: boolean; wrong: boolean }>`
+export const CheckAnswer = styled.span<{
+  correct: boolean | null;
+  wrong: boolean | null;
+}>`
   ${({ theme, correct, wrong }) => css`
     display: block;
     width: 15px;

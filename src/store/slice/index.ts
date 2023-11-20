@@ -1,61 +1,108 @@
-import questions from "../../questions/index";
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+
+import axios from "axios";
 
 import * as t from "./types";
 
-const STAGES = ["Start", "Playing", "End"];
-
-const initialState: t.TQuizState = {
-  gameStage: STAGES[0],
-  questions: questions,
+//@TODO olhar aqui depois
+const initialState: Quiz.TQuizState = {
+  gameStage: t.EStages.Start,
+  questions: null,
   currentQuestion: 0,
   score: 0,
   answerSelected: "",
+  loading: false,
+  answer: false,
 };
+
+export const getQuestions = createAsyncThunk("getQuestions", async () => {
+  return await axios
+    .get("http://localhost:3001/api/questions")
+    .then((resp) => resp.data.data);
+});
+
+export const postQuestion = createAsyncThunk(
+  "postQuestion",
+  async (option: string) => {
+    return await axios
+      .post("http://localhost:3001/api/check-answer", {
+        correctAnswer: option,
+      })
+      .then((e) => e.data);
+  }
+);
 
 export const quizSlice = createSlice({
   name: "quiz",
   initialState,
+  extraReducers: (builder) => {
+    builder.addCase(getQuestions.pending, (state) => {
+      return {
+        ...state,
+        loading: true,
+      };
+    });
+    builder.addCase(getQuestions.fulfilled, (state, action) => {
+      return {
+        ...state,
+        loading: false,
+        questions: action.payload,
+      };
+    });
+    builder.addCase(postQuestion.pending, (state) => {
+      return {
+        ...state,
+        loading: true,
+      };
+    });
+    builder.addCase(postQuestion.fulfilled, (state, action) => {
+      return {
+        ...state,
+        loading: false,
+        answer: action.payload,
+      };
+    });
+  },
   reducers: {
-    changeStage: (state) => {
-      (state.gameStage = STAGES[1]), state;
+    changeStage: (state): Quiz.TQuizState => {
+      return {
+        ...state,
+        gameStage: t.EStages.Playing,
+      };
     },
     changeQuestion: (state) => {
       const nextQuestion = state.currentQuestion + 1;
 
       let endGame = false;
-
-      if (!questions[nextQuestion]) {
+      if (state.questions && !state?.questions[nextQuestion]) {
         endGame = true;
       }
-
-      (state.currentQuestion = nextQuestion),
-        (state.gameStage = endGame ? STAGES[2] : state.gameStage),
-        (state.answerSelected = ""),
-        state;
+      return {
+        ...state,
+        currentQuestion: nextQuestion,
+        gameStage: endGame ? t.EStages.End : state.gameStage,
+        answerSelected: "",
+        answer: null,
+      };
     },
+
     checkAnswer: (state, action: PayloadAction<t.ActionPayload>) => {
       const correctedAnswer = action.payload?.answer;
       const selectedAnswer = action.payload?.option;
+
       let rightAnswer = 0;
 
       if (selectedAnswer === correctedAnswer) {
         rightAnswer = 1;
       }
 
-      if (state.answerSelected) return state;
-
-      (state.score = state.score + rightAnswer),
-        (state.answerSelected = selectedAnswer),
-        state;
+      return {
+        ...state,
+        score: state.score + rightAnswer,
+        answerSelected: selectedAnswer,
+      };
     },
-    newGame: (state) => {
-      (state.gameStage = STAGES[0]),
-        state.questions,
-        (state.currentQuestion = 0),
-        (state.score = 0),
-        (state.answerSelected = "");
-    },
+    newGame: () => initialState,
   },
 });
 

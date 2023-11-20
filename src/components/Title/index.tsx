@@ -1,10 +1,6 @@
 import * as s from "./styles";
 
-type TTitleProps = {
-  title: string;
-};
-
-const Title = ({ title }: TTitleProps) => (
+const Title = ({ title }: { title: string }) => (
   <s.StyledTitle>{title}</s.StyledTitle>
 );
 

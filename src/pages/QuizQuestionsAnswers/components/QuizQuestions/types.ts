@@ -1,5 +1,5 @@
 export type TQuizQuestionsProps = {
   currentQuestion: number;
-  totalQuestion: number;
-  question: string;
+  totalQuestion: number | undefined;
+  question: string | undefined;
 };

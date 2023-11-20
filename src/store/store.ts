@@ -1,10 +1,14 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
+
 import { quizReducer } from "./slice";
 
-export const store = configureStore({
-  reducer: {
-    quizDomain: quizReducer,
-  },
+const combineReducer = combineReducers({
+  quizDomain: quizReducer,
 });
 
-export type RootState = ReturnType<typeof store.getState>;
+export const store = configureStore({
+  reducer: (state, action) => combineReducer(state, action),
+});
+
+export type RootState = ReturnType<typeof combineReducer>;
+export type AppDispatch = typeof store.dispatch;
