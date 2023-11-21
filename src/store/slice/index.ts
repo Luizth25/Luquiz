@@ -17,7 +17,7 @@ const initialState: Quiz.TQuizState = {
 
 export const getQuestions = createAsyncThunk("getQuestions", async () => {
   return await axios
-    .get("http://localhost:3001/api/questions")
+    .get("https://luiz-api.onrender.com/api/questions")
     .then((resp) => resp.data.data);
 });
 
@@ -25,7 +25,7 @@ export const postQuestion = createAsyncThunk(
   "postQuestion",
   async (option: string) => {
     return await axios
-      .post("http://localhost:3001/api/check-answer", {
+      .post("https://luiz-api.onrender.com/api/check-answer", {
         correctAnswer: option,
       })
       .then((e) => e.data);
